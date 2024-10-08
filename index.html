@@ -3,33 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Drive Image Viewer</title>
+    <title>Google Drive PDF Viewer</title>
     <style>
+        html, body {
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            height: 100vh; /* Full viewport height */
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            position: relative;
+            z-index: 1;
+        }
         .overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(255, 255, 255, 0); /* 100% transparent */
-            z-index: 10;
-        }
-        .iframe-container {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-        }
-        iframe {
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            border: none; /* Removes the border around the iframe */
+            background-color: rgba(255, 255, 255, 0); /* Fully transparent */
+            z-index: 2;
+            pointer-events: none; /* Allows scrolling through the iframe */
         }
     </style>
 </head>
 <body>
     <div class="iframe-container">
-        <iframe src="https://drive.google.com/file/d/1ONft5UWtmAHOJS-jFAJ6LXxgYmHO9k6T"></iframe>
+        <!-- Google Drive embedded PDF link -->
+        <iframe src="https://drive.google.com/file/d/1ONft5UWtmAHOJS-jFAJ6LXxgYmHO9k6T/preview" allowfullscreen></iframe>
         <div class="overlay"></div>
     </div>
 </body>
