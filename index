@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Drive Image Viewer</title>
+    <style>
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0); /* 100% transparent */
+            z-index: 10;
+        }
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="iframe-container">
+        <iframe src="https://docs.google.com/spreadsheets/d/1vNctebrT4aiez0aTwjVB1qhg3F6u3J2y_xRact8EL9A/edit?usp=sharing" frameborder="0"></iframe>
+        <div class="overlay"></div>
+    </div>
+</body>
+</html>
