@@ -19,78 +19,65 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      overflow: hidden;
     }
 
-    #pdf-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0); /* Transparent */
-      z-index: 10;
-      pointer-events: none;
-    }
-
-    embed {
+    iframe {
       width: 80%;
       height: 90%;
       border: none;
       z-index: 1;
     }
 
-    /* Hide the Google Drive data tool tip pop-out button */
-    .ndfHFb-c4YZDc-Bz112c,
-    .ndfHFb-c4YZDc-DH6Rkf-Bz112c {
-      display: none !important;
+    /* Transparent overlay to prevent content selection, copying, or interaction */
+    #overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0); /* Fully transparent */
+      z-index: 10;
     }
   </style>
 </head>
 <body>
 
   <div id="pdf-container">
-    <!-- Embed the PDF directly using an <embed> tag -->
-    <embed id="pdf-viewer" src="https://www.papermark.io/view/cm21jm71l0002mkzfmo2a9iqy" type="application/pdf">
-    
-    <!-- Transparent overlay to block interaction -->
-    <div id="pdf-overlay"></div>
+    <!-- Embed the PDF inside an iframe -->
+    <iframe src="https://www.papermark.io/view/cm21jm71l0002mkzfmo2a9iqy"></iframe>
+
+    <!-- Transparent overlay to prevent user interaction -->
+    <div id="overlay"></div>
   </div>
 
   <script>
-    // Prevent right-click context menu
+    // Prevent right-click to disable context menu for copying/saving
     document.addEventListener('contextmenu', function(e) {
       e.preventDefault();
     }, false);
 
-    // Disable key combinations like Ctrl+S, Ctrl+P (saving, printing), and Ctrl+U (view source)
+    // Disable common key combinations like Ctrl+S, Ctrl+P, Ctrl+U (saving, printing, view source)
     document.addEventListener('keydown', function(e) {
-      if (e.ctrlKey && (e.key === 'p' || e.key === 's' || e.key === 'u')) {
+      if (e.ctrlKey && (e.key === 's' || e.key === 'p' || e.key === 'u' || e.key === 'a' || e.key === 'c')) {
         e.preventDefault();
         alert('This action is disabled!');
       }
-      
+
       // Disable F12 (developer tools)
       if (e.key === 'F12') {
         e.preventDefault();
       }
     });
 
-    // Disable the print function
-    window.addEventListener('beforeprint', function(e) {
-      alert('Printing is disabled for this document!');
-      e.preventDefault();
-    });
-
-    // Disable dragging the PDF or overlay
-    const disableDragElements = [document.getElementById('pdf-viewer'), document.getElementById('pdf-overlay')];
+    // Prevent dragging the PDF or overlay
+    const disableDragElements = [document.querySelector('iframe'), document.getElementById('overlay')];
     disableDragElements.forEach(element => {
       element.addEventListener('dragstart', function(e) {
         e.preventDefault();
       });
     });
 
-    // Continuously monitor for Developer Tools (Ctrl+Shift+I, F12)
+    // Continuously monitor for Developer Tools
     setInterval(function() {
       if (window.devtools.isOpen) {
         alert('Developer tools are disabled on this page!');
