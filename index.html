@@ -33,19 +33,28 @@
       pointer-events: none;
     }
 
-    iframe {
+    object, embed {
       width: 80%;
       height: 90%;
       border: none;
       z-index: 1;
+    }
+
+    /* Hide the Google Drive data tool tip pop-out button */
+    .ndfHFb-c4YZDc-Bz112c,
+    .ndfHFb-c4YZDc-DH6Rkf-Bz112c {
+      display: none !important;
     }
   </style>
 </head>
 <body>
 
   <div id="pdf-container">
-    <!-- The PDF File is loaded here -->
-    <iframe id="pdf-viewer" src="https://drive.google.com/viewerng/viewer?embedded=true&url=https://drive.google.com/file/d/1ZHtZrPRqCO_mT5Llp7f1aRTyRj2Jq_M7/view?usp=sharing"></iframe>
+    <!-- Directly embedding the PDF -->
+    <object id="pdf-viewer" type="application/pdf" data="https://drive.google.com/file/d/1ZHtZrPRqCO_mT5Llp7f1aRTyRj2Jq_M7/view?usp=sharing">
+      Your browser does not support embedded PDFs. Please download the PDF to view it: 
+      <a href="YOUR_PDF_FILE_URL_HERE">Download PDF</a>
+    </object>
     
     <!-- Transparent overlay to prevent copying, saving, etc. -->
     <div id="pdf-overlay"></div>
@@ -76,7 +85,7 @@
       e.preventDefault();
     });
 
-    // Disable dragging the image or iframe
+    // Disable dragging the image or object element
     const disableDragElements = [document.getElementById('pdf-viewer'), document.getElementById('pdf-overlay')];
     disableDragElements.forEach(element => {
       element.addEventListener('dragstart', function(e) {
