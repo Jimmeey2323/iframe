@@ -1,51 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure PDF Viewer</title>
-    <style>
-        #pdf-container {
-            width: 100%;
-            height: 100vh;
-            overflow: hidden;
-        }
-        canvas {
-            width: 100%;
-            height: auto;
-        }
-    </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure PDF Viewer</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+      overflow: hidden;
+    }
+
+    #pdf-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    #pdf-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0); /* Transparent */
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    iframe {
+      width: 80%;
+      height: 90%;
+      border: none;
+      z-index: 1;
+    }
+  </style>
 </head>
 <body>
-    <div id="pdf-container"></div>
 
-    <script>
-        const url = 'https://drive.google.com/uc?export=download&id=1ONft5UWtmAHOJS-jFAJ6LXxgYmHO9k6T';
-        const pdfContainer = document.getElementById('pdf-container');
+  <div id="pdf-container">
+    <!-- The PDF File is loaded here -->
+    <iframe id="pdf-viewer" src="https://drive.google.com/viewerng/viewer?embedded=true&url=https://drive.google.com/file/d/1ZHtZrPRqCO_mT5Llp7f1aRTyRj2Jq_M7/view?usp=sharing"></iframe>
+    
+    <!-- Transparent overlay to prevent copying, saving, etc. -->
+    <div id="pdf-overlay"></div>
+  </div>
 
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+  <script>
+    // Prevent right-click context menu
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    }, false);
 
-        const loadingTask = pdfjsLib.getDocument(url);
-        loadingTask.promise.then(function(pdf) {
-            // Fetch the first page
-            return pdf.getPage(1).then(function(page) {
-                const viewport = page.getViewport({scale: 1.5});
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
-                pdfContainer.appendChild(canvas);
+    // Disable key combinations like Ctrl+S, Ctrl+P (saving, printing), and Ctrl+U (view source)
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && (e.key === 'p' || e.key === 's' || e.key === 'u')) {
+        e.preventDefault();
+        alert('This action is disabled!');
+      }
+      
+      // Disable F12 (developer tools)
+      if (e.key === 'F12') {
+        e.preventDefault();
+      }
+    });
 
-                const renderContext = {
-                    canvasContext: context,
-                    viewport: viewport
-                };
-                return page.render(renderContext).promise;
-            });
-        }).catch(function(error) {
-            console.error('Error loading PDF:', error);
-        });
-    </script>
+    // Disable the print function
+    window.addEventListener('beforeprint', function(e) {
+      alert('Printing is disabled for this document!');
+      e.preventDefault();
+    });
+
+    // Disable dragging the image or iframe
+    const disableDragElements = [document.getElementById('pdf-viewer'), document.getElementById('pdf-overlay')];
+    disableDragElements.forEach(element => {
+      element.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+      });
+    });
+
+    // Additional security: continuously check for key presses like Ctrl+Shift+I (Dev Tools) or F12
+    setInterval(function() {
+      if (window.devtools.isOpen) {
+        alert('Developer tools are disabled on this page!');
+        window.close();
+      }
+    }, 1000);
+  </script>
+
 </body>
 </html>
