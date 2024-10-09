@@ -33,7 +33,7 @@
       pointer-events: none;
     }
 
-    object, embed {
+    embed {
       width: 80%;
       height: 90%;
       border: none;
@@ -50,13 +50,10 @@
 <body>
 
   <div id="pdf-container">
-    <!-- Directly embedding the PDF -->
-    <object id="pdf-viewer" type="application/pdf" data="https://www.papermark.io/view/cm21jm71l0002mkzfmo2a9iqy">
-      Your browser does not support embedded PDFs. Please download the PDF to view it: 
-      <a href="https://www.papermark.io/view/cm21jm71l0002mkzfmo2a9iqy">Download PDF</a>
-    </object>
+    <!-- Embed the PDF directly using an <embed> tag -->
+    <embed id="pdf-viewer" src="https://www.papermark.io/view/cm21jm71l0002mkzfmo2a9iqy" type="application/pdf">
     
-    <!-- Transparent overlay to prevent copying, saving, etc. -->
+    <!-- Transparent overlay to block interaction -->
     <div id="pdf-overlay"></div>
   </div>
 
@@ -85,7 +82,7 @@
       e.preventDefault();
     });
 
-    // Disable dragging the image or object element
+    // Disable dragging the PDF or overlay
     const disableDragElements = [document.getElementById('pdf-viewer'), document.getElementById('pdf-overlay')];
     disableDragElements.forEach(element => {
       element.addEventListener('dragstart', function(e) {
@@ -93,7 +90,7 @@
       });
     });
 
-    // Additional security: continuously check for key presses like Ctrl+Shift+I (Dev Tools) or F12
+    // Continuously monitor for Developer Tools (Ctrl+Shift+I, F12)
     setInterval(function() {
       if (window.devtools.isOpen) {
         alert('Developer tools are disabled on this page!');
