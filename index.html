@@ -15,7 +15,7 @@
             height: auto;
         }
     </style>
-    <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
 </head>
 <body>
     <div id="pdf-container"></div>
@@ -23,6 +23,8 @@
     <script>
         const url = 'https://drive.google.com/uc?export=download&id=1ONft5UWtmAHOJS-jFAJ6LXxgYmHO9k6T';
         const pdfContainer = document.getElementById('pdf-container');
+
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
 
         const loadingTask = pdfjsLib.getDocument(url);
         loadingTask.promise.then(function(pdf) {
@@ -41,6 +43,8 @@
                 };
                 return page.render(renderContext).promise;
             });
+        }).catch(function(error) {
+            console.error('Error loading PDF:', error);
         });
     </script>
 </body>
